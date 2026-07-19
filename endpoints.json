@@ -1,0 +1,93 @@
+[
+    {
+        "method": "GET",
+        "path": "/users",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": null,
+        "description": "List all users"
+    },
+    {
+        "method": "GET",
+        "path": "/users/{id}",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": null,
+        "description": "Get user by ID"
+    },
+    {
+        "method": "POST",
+        "path": "/users",
+        "expected_status": 201,
+        "auth_type": "required",
+        "body_template": {
+            "name": "string",
+            "email": "user@example.com"
+        },
+        "description": "Create new user"
+    },
+    {
+        "method": "PUT",
+        "path": "/users/{id}",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": {
+            "name": "string",
+            "email": "user@example.com"
+        },
+        "description": "Update user"
+    },
+    {
+        "method": "DELETE",
+        "path": "/users/{id}",
+        "expected_status": 204,
+        "auth_type": "required",
+        "body_template": null,
+        "description": "Delete user"
+    },
+    {
+        "method": "POST",
+        "path": "/login",
+        "expected_status": 200,
+        "auth_type": "none",
+        "body_template": {
+            "username": "admin",
+            "password": "password123"
+        },
+        "description": "User login"
+    },
+    {
+        "method": "GET",
+        "path": "/users/me",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": null,
+        "description": "Get current user profile"
+    },
+    {
+        "method": "GET",
+        "path": "/products",
+        "expected_status": 200,
+        "auth_type": "none",
+        "body_template": null,
+        "description": "List public products"
+    },
+    {
+        "method": "GET",
+        "path": "/admin/users",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": null,
+        "description": "Admin: list all users"
+    },
+    {
+        "method": "PATCH",
+        "path": "/users/{id}",
+        "expected_status": 200,
+        "auth_type": "required",
+        "body_template": {
+            "name": "updated_name"
+        },
+        "description": "Partial update user"
+    }
+]
