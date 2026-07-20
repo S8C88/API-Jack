@@ -393,13 +393,6 @@ def check_excessive_data(
         "session_id", "cookie", "jwt", "bearer",
     ]
 
-    common_sensitive_keys = [
-        "password", "secret", "token", "apiKey", "api_key",
-        "creditCard", "credit_card", "ssn", "socialSecurity",
-        "privateKey", "passphrase", "pin", "cvv", "cvc",
-        "accessToken", "refreshToken", "sessionId", "jwt",
-    ]
-
     resp, err = client.request("GET", url)
 
     if err:
@@ -563,11 +556,6 @@ def check_bola(
         return findings
 
     baseline_status = baseline_resp.status_code
-    baseline_body = ""
-    try:
-        baseline_body = baseline_resp.text[:500]
-    except Exception:
-        pass
 
     accessible_ids = []
     for test_id in id_range:
@@ -888,9 +876,6 @@ def run_scan(
     for i, ep in enumerate(endpoints, 1):
         method = ep.get("method", "GET").upper()
         path = ep.get("path", "/")
-        expected_status = ep.get("expected_status", 200)
-        auth_type = ep.get("auth_type", "required")
-        body_template = ep.get("body_template")
 
         print(colorize(f"  [{i}/{len(endpoints)}] Testing {method} {path}", "cyan"))
 
