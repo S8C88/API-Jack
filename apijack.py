@@ -30,9 +30,11 @@ except ImportError:
     sys.exit(1)
 
 
-# ──────────────────────────────────────────────────────────────────────
 # Constants
-# ──────────────────────────────────────────────────────────────────────
+
+
+
+
 VERSION = "1.0.0"
 SEVERITY_CRITICAL = "CRITICAL"
 SEVERITY_HIGH = "HIGH"
@@ -63,9 +65,8 @@ COLORS = {
 }
 
 
-# ──────────────────────────────────────────────────────────────────────
 # Utility functions
-# ──────────────────────────────────────────────────────────────────────
+
 def colorize(text: str, color: str, bold: bool = False) -> str:
     """Wrap text in ANSI color codes."""
     if not sys.stdout.isatty():
@@ -94,9 +95,8 @@ def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
-# ──────────────────────────────────────────────────────────────────────
 # Finding model
-# ──────────────────────────────────────────────────────────────────────
+
 class Finding:
     """Represents a single security finding."""
 
@@ -145,9 +145,8 @@ class Finding:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
 # Reporter
-# ──────────────────────────────────────────────────────────────────────
+
 class Reporter:
     """Collects findings and outputs results as a colorized table + JSON."""
 
@@ -242,11 +241,10 @@ class Reporter:
             print(colorize(f"  [DEBUG] {msg}", "dim"))
 
 
-# ──────────────────────────────────────────────────────────────────────
 # HTTP Client wrapper
-# ──────────────────────────────────────────────────────────────────────
+
+
 class APIClient:
-    """Thin wrapper around requests with logging support."""
 
     def __init__(self, base_url: str, reporter: Reporter, timeout: int = 15):
         self.base_url = base_url.rstrip("/")
@@ -430,7 +428,11 @@ def check_excessive_data(
     # Recursively look for sensitive keys in the response
     exposed_fields = []
 
-    def _scan(obj, path_prefix=""):
+    def _scan(obj, path_prefix="", depth=0):
+        # CWE-674: limit recursion depth to prevent stack overflow
+        MAX_DEPTH = 20
+        if depth > MAX_DEPTH:
+            return
         if isinstance(obj, dict):
             for key, value in obj.items():
                 full_path = f"{path_prefix}.{key}" if path_prefix else key
@@ -442,12 +444,12 @@ def check_excessive_data(
                         break
                 # Recurse into nested objects/arrays
                 if isinstance(value, (dict, list)):
-                    _scan(value, full_path)
+                    _scan(value, full_path, depth + 1)
         elif isinstance(obj, list):
             for i, item in enumerate(obj):
                 full_path = f"{path_prefix}[{i}]"
                 if isinstance(item, (dict, list)):
-                    _scan(item, full_path)
+                    _scan(item, full_path, depth + 1)
 
     _scan(data)
 
