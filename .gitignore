@@ -37,3 +37,4 @@ report-*.json
 .coverage
 htmlcov/
 venv/
+*.pyc
